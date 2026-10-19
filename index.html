@@ -3,169 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2X Anime Vault - God Tier Edition</title>
+    <title>2X Anime Vault - Fancy Optimized</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     <style>
         /* --- GOD LEVEL CSS VARIABLES --- */
         :root {
             --theme: #00e5ff; 
-            --theme-glow: rgba(0, 229, 255, 0.5);
+            --theme-glow: rgba(0, 229, 255, 0.3); 
             --bg-dark: #050914;
             --font-main: 'Outfit', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
         
-        body { background-color: var(--bg-dark); color: #fff; min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; }
+        /* NO LAG BACKGROUND */
+        body { 
+            background-color: var(--bg-dark); 
+            color: #fff; min-height: 100vh; overflow-x: hidden; scroll-behavior: smooth; 
+            background-image: 
+                radial-gradient(circle at 15% 50%, var(--theme-glow), transparent 25%), 
+                radial-gradient(circle at 85% 30%, var(--theme-glow), transparent 25%);
+            background-size: 100vw 100vh;
+            background-attachment: fixed;
+            transition: background 0.8s ease;
+        }
         
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: var(--theme); border-radius: 10px; }
 
-        /* --- FLUID PARTICLE BACKGROUND --- */
-        #particle-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; pointer-events: none; }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; background: radial-gradient(circle at center, transparent 0%, #03060f 100%); pointer-events: none; }
-
-        /* --- EPIC CINEMATIC INTRO --- */
-        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #03060f; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s cubic-bezier(0.77, 0, 0.175, 1), transform 1s; }
-        .vault-logo-big { font-size: 80px; font-weight: 900; letter-spacing: 15px; color: transparent; -webkit-text-stroke: 1px var(--theme); position: relative; }
-        .vault-logo-big::before { content: '2X VAULT'; position: absolute; left: 0; top: 0; width: 0%; height: 100%; color: var(--theme); overflow: hidden; animation: fillText 2s ease-in-out forwards; -webkit-text-stroke: 0px; text-shadow: 0 0 30px var(--theme-glow); }
+        /* --- EPIC INTRO --- */
+        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #03060f; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.8s ease, visibility 0.8s; }
+        .vault-logo-big { font-size: 70px; font-weight: 900; letter-spacing: 12px; color: transparent; -webkit-text-stroke: 1px var(--theme); position: relative; }
+        .vault-logo-big::before { content: '2X VAULT'; position: absolute; left: 0; top: 0; width: 0%; height: 100%; color: var(--theme); overflow: hidden; animation: fillText 2s ease-in-out forwards; -webkit-text-stroke: 0px; text-shadow: 0 0 20px var(--theme-glow); }
         @keyframes fillText { 0% { width: 0%; } 100% { width: 100%; } }
-        .intro-hidden { opacity: 0; transform: scale(1.1); pointer-events: none; visibility: hidden; }
+        .loading-bar { width: 250px; height: 3px; background: rgba(255, 255, 255, 0.05); margin-top: 20px; border-radius: 10px; overflow: hidden; position: relative; }
+        .loading-bar::after { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--theme); animation: load 2s ease forwards; box-shadow: 0 0 10px var(--theme); }
+        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+        .intro-hidden { opacity: 0; visibility: hidden; }
 
-        /* --- SMOOTH CUSTOM CURSOR --- */
-        #cursor-dot { position: fixed; width: 8px; height: 8px; background: var(--theme); border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); box-shadow: 0 0 10px var(--theme); transition: width 0.2s, height 0.2s; }
-        #cursor-ring { position: fixed; width: 40px; height: 40px; border: 2px solid var(--theme-glow); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
+        /* --- BURST ANIMATION (ON CLICK) --- */
+        .sparkle-particle { position: fixed; width: 5px; height: 5px; border-radius: 50%; pointer-events: none; z-index: 999999; animation: sparkAnim 0.5s ease-out forwards; }
+        @keyframes sparkAnim { 0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } 100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; } }
 
-        /* --- NEW: INTERACTIVE SPARKLE BURST --- */
-        .sparkle-particle {
-            position: fixed; width: 6px; height: 6px; border-radius: 50%; pointer-events: none; z-index: 999999;
-            animation: sparkAnim 0.6s cubic-bezier(0, .9, .9, 1) forwards;
-        }
-        @keyframes sparkAnim {
-            0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
-            100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; }
-        }
-
-        /* --- SUPREME GLASS HEADER --- */
-        header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 9, 20, 0.7); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* --- LIGHTWEIGHT HEADER --- */
+        header { padding: 18px 35px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 9, 20, 0.98); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0, 229, 255, 0.1); transition: border-color 0.5s; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
         
         .logo-box { display: flex; flex-direction: column; }
-        .logo { font-size: 32px; font-weight: 900; letter-spacing: 2px; line-height: 1; }
-        .logo span { color: var(--theme); text-shadow: 0 0 20px var(--theme-glow); transition: 0.5s; }
-        .rank { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 3px; text-transform: uppercase; margin-top: 5px; }
+        .logo { font-size: 28px; font-weight: 900; letter-spacing: 2px; line-height: 1; cursor: pointer; }
+        .logo span { color: var(--theme); text-shadow: 0 0 15px var(--theme-glow); transition: 0.5s; }
+        .rank { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
         .rank span { color: var(--theme); transition: 0.5s; }
 
-        .search-container { flex: 1; max-width: 550px; margin: 0 30px; position: relative; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 12px 25px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .search-box:focus-within { background: rgba(255, 255, 255, 0.05); border-color: var(--theme); box-shadow: 0 10px 30px var(--theme-glow); transform: translateY(-2px); }
-        .search-box input { width: 100%; background: transparent; border: none; color: #fff; outline: none; font-size: 16px; letter-spacing: 1px; font-weight: 600; }
+        .search-container { flex: 1; max-width: 500px; margin: 0 20px; position: relative; }
+        .search-box { width: 100%; display: flex; align-items: center; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 10px 20px; transition: 0.3s; }
+        .search-box:focus-within { border-color: var(--theme); box-shadow: 0 5px 15px var(--theme-glow); transform: translateY(-1px); }
+        .search-box input { width: 100%; background: transparent; border: none; color: #fff; outline: none; font-size: 15px; font-weight: 600; }
         .search-box input::placeholder { color: #475569; font-weight: 400; }
-        .search-box svg { width: 20px; fill: var(--theme); margin-right: 15px; transition: 0.5s; }
+        .search-box svg { width: 18px; fill: var(--theme); margin-right: 12px; transition: 0.5s; }
 
-        .tools { display: flex; gap: 15px; align-items: center; }
-        .tool-btn { width: 45px; height: 45px; border-radius: 12px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .tool-btn:hover { background: var(--theme-glow); border-color: var(--theme); transform: translateY(-4px); box-shadow: 0 10px 20px var(--theme-glow); }
-        .tool-btn svg { width: 22px; fill: #64748b; transition: 0.4s; }
-        .tool-btn:hover svg, .tool-btn.active svg { fill: #fff; }
+        .tools { display: flex; gap: 12px; align-items: center; }
+        .tool-btn { width: 42px; height: 42px; border-radius: 10px; background: #0f172a; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
+        .tool-btn:hover { background: var(--theme-glow); border-color: var(--theme); transform: translateY(-3px); }
+        .tool-btn svg { width: 20px; fill: #64748b; transition: 0.3s; }
+        .tool-btn:hover svg { fill: #fff; }
 
-        .total-counter { font-size: 14px; font-weight: 800; background: rgba(255, 255, 255, 0.05); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .total-counter span { color: var(--theme); font-size: 16px; margin-left: 5px; transition: 0.5s; }
+        .total-counter { font-size: 13px; font-weight: 800; background: #0f172a; padding: 8px 16px; border-radius: 10px; border: 1px solid #1e293b; }
+        .total-counter span { color: var(--theme); font-size: 15px; margin-left: 5px; transition: 0.5s; }
 
-        /* --- GOD TIER GRID (NO BLUR, PURE GLOW) --- */
-        .grid-container { padding: 40px 40px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 35px; z-index: 10; transition: 0.5s ease; }
+        /* --- FANCY GRID & HOVER ENGINE (NO BLUR!) --- */
+        .grid-container { padding: 40px 35px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 28px; z-index: 10; }
 
         .anime-card { 
-            border-radius: 20px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 2/3; 
-            background: #000; border: 1px solid rgba(255,255,255,0.05); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1); 
-            animation: popIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+            border-radius: 16px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 2/3; 
+            background: #0f172a; border: 1px solid #1e293b; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+            /* Bouncy smooth transition */
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease, border-color 0.4s ease; 
         }
-        @keyframes popIn { 0% { opacity: 0; transform: translateY(40px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 
+        /* FANCY HOVER: Scale up + Glow (No blurring peers) */
         .anime-card:hover { 
-            transform: translateY(-15px) scale(1.08); 
+            transform: translateY(-12px) scale(1.06); 
             border-color: var(--theme); 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9), 0 0 40px var(--theme-glow); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9), 0 0 30px var(--theme-glow); 
             z-index: 20; 
         }
         
-        .anime-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); opacity: 0.85; }
-        .anime-card:hover .anime-img { transform: scale(1.1); opacity: 1; filter: contrast(1.1); }
-        
-        .anime-card::before { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent); transform: skewX(-25deg); transition: 0.7s; z-index: 3; pointer-events: none; }
+        /* HOLOGRAPHIC SHINE EFFECT */
+        .anime-card::before { 
+            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; 
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent); 
+            transform: skewX(-25deg); transition: 0.7s; z-index: 3; pointer-events: none; 
+        }
         .anime-card:hover::before { left: 150%; transition: 0.7s ease-in-out; }
-        
-        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 50px 20px 25px; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; z-index: 2; transition: 0.4s; }
-        .anime-card:hover .card-overlay { padding-bottom: 35px; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 70%, transparent 100%); }
-        
-        .anime-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1.2; text-shadow: 0 4px 15px rgba(0,0,0,1); transition: 0.3s; transform: translateY(10px); }
-        .anime-card:hover .anime-title { transform: translateY(0); color: var(--theme); }
-        
-        .anime-tags { display: flex; flex-wrap: wrap; gap: 8px; transform: translateY(10px); opacity: 0.8; transition: 0.4s; }
-        .anime-card:hover .anime-tags { transform: translateY(0); opacity: 1; }
-        .card-tag { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 11px; padding: 5px 12px; border-radius: 8px; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; backdrop-filter: blur(5px); }
-        .anime-card:hover .card-tag { border-color: var(--theme); color: var(--theme); background: var(--theme-glow); }
 
-        /* Admin Action Buttons */
-        .admin-actions { position: absolute; top: 15px; right: 15px; display: none; gap: 10px; z-index: 5; opacity: 0; transform: translateY(-10px); transition: 0.4s; }
+        /* Image scaling inside */
+        .anime-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .anime-card:hover .anime-img { transform: scale(1.12); filter: contrast(1.1); }
+        
+        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; z-index: 2; transition: 0.3s; }
+        .anime-card:hover .card-overlay { padding-bottom: 25px; background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 70%, transparent 100%); }
+        
+        .anime-title { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 8px; line-height: 1.2; text-shadow: 0 2px 10px rgba(0,0,0,1); transition: 0.3s; transform: translateY(5px); }
+        .anime-card:hover .anime-title { color: var(--theme); transform: translateY(0); }
+        
+        .anime-tags { display: flex; flex-wrap: wrap; gap: 6px; transform: translateY(5px); transition: 0.3s; opacity: 0.9; }
+        .anime-card:hover .anime-tags { transform: translateY(0); opacity: 1; }
+        .card-tag { background: rgba(255,255,255,0.08); color: #fff; font-size: 10px; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; font-weight: 800; transition: 0.3s; border: 1px solid transparent; }
+        .anime-card:hover .card-tag { color: var(--theme); background: var(--theme-glow); border-color: var(--theme); }
+
+        /* Admin Card Actions */
+        .admin-actions { position: absolute; top: 12px; right: 12px; display: none; gap: 8px; z-index: 5; opacity: 0; transition: 0.3s; transform: translateY(-5px); }
         .admin-mode .admin-actions { display: flex; }
         .anime-card:hover .admin-actions { opacity: 1; transform: translateY(0); }
         
-        .action-btn { width: 40px; height: 40px; border-radius: 12px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1); color: #fff; font-size: 16px; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); }
-        .edit-btn:hover { background: #3b82f6; box-shadow: 0 5px 20px rgba(59, 130, 246, 0.6); transform: scale(1.15); }
-        .delete-btn:hover { background: #ef4444; box-shadow: 0 5px 20px rgba(239, 68, 68, 0.6); transform: scale(1.15) rotate(10deg); }
+        .action-btn { width: 35px; height: 35px; border-radius: 8px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; color: #fff; font-size: 14px; background: rgba(0, 0, 0, 0.8); }
+        .edit-btn:hover { background: #3b82f6; transform: scale(1.1); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.5); }
+        .delete-btn:hover { background: #ef4444; transform: scale(1.1); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.5); }
 
-        /* --- MAGNETIC ADMIN BUTTON --- */
-        #add-btn-wrapper { position: fixed; bottom: 40px; right: 40px; width: 100px; height: 100px; display: none; align-items: center; justify-content: center; z-index: 1000; }
+        /* --- ADD BUTTON --- */
+        #add-btn-wrapper { position: fixed; bottom: 30px; right: 30px; display: none; z-index: 1000; }
         .admin-mode #add-btn-wrapper { display: flex; }
-        #add-btn { background: var(--theme); color: #000; width: 65px; height: 65px; border-radius: 20px; font-size: 35px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 10px 30px var(--theme-glow); transition: transform 0.2s, background 0.5s; display: flex; align-items: center; justify-content: center; position: absolute; }
-        #add-btn:hover { transform: scale(1.15); }
+        #add-btn { background: var(--theme); color: #000; width: 60px; height: 60px; border-radius: 18px; font-size: 30px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 8px 25px var(--theme-glow); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; }
+        #add-btn:hover { transform: scale(1.15) rotate(90deg); }
 
-        /* --- CINEMATIC MODAL --- */
-        #admin-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); opacity: 0; transition: 0.4s; }
-        #admin-modal.show { opacity: 1; display: flex; }
-        .modal-content { background: #070b14; padding: 45px; border-radius: 24px; width: 100%; max-width: 480px; border: 1px solid var(--theme-glow); box-shadow: 0 30px 60px rgba(0, 0, 0, 1), 0 0 50px var(--theme-glow) inset; transform: scale(0.9) translateY(30px); transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        #admin-modal.show .modal-content { transform: scale(1) translateY(0); }
+        /* --- ADMIN MODALS (LOGIN & ENTRY) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 15, 0.95); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: 0.3s ease; }
+        .modal-overlay.show { opacity: 1; display: flex; }
         
-        .modal-content h2 { color: #fff; margin-bottom: 35px; text-align: center; font-weight: 900; font-size: 28px; letter-spacing: 2px; text-transform: uppercase; }
-        .modal-content h2 span { color: var(--theme); transition: 0.5s; text-shadow: 0 0 15px var(--theme-glow); }
+        .modal-box { background: #0b1121; padding: 40px; border-radius: 20px; width: 100%; max-width: 420px; border: 1px solid var(--theme-glow); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--theme-glow) inset; transform: scale(0.95) translateY(20px); transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .modal-overlay.show .modal-box { transform: scale(1) translateY(0); }
         
-        .input-group { margin-bottom: 25px; }
-        .input-group label { display: block; font-size: 13px; margin-bottom: 10px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group input { width: 100%; padding: 18px 20px; background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); color: #fff; border-radius: 14px; outline: none; font-size: 16px; transition: 0.4s; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
-        .input-group input:focus { border-color: var(--theme); background: rgba(255, 255, 255, 0.02); box-shadow: inset 0 0 20px var(--theme-glow); transform: translateY(-2px); }
+        .modal-box h2 { color: #fff; margin-bottom: 30px; text-align: center; font-weight: 900; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; }
+        .modal-box h2 span { color: var(--theme); transition: 0.5s; }
         
-        .modal-actions { display: flex; gap: 15px; margin-top: 40px; }
-        .modal-btn { flex: 1; padding: 18px; border: none; border-radius: 14px; font-weight: 900; font-size: 15px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 2px; }
-        .save-btn { background: var(--theme); color: #000; box-shadow: 0 10px 25px var(--theme-glow); transition: 0.5s; }
-        .save-btn:hover { transform: translateY(-4px); box-shadow: 0 15px 35px var(--theme-glow); filter: brightness(1.2); }
-        .cancel-btn { background: rgba(255, 255, 255, 0.05); color: #cbd5e1; border: 1px solid rgba(255, 255, 255, 0.1); }
-        .cancel-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: translateY(-4px); }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; margin-bottom: 8px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input { width: 100%; padding: 15px 18px; background: #050914; border: 1px solid #1e293b; color: #fff; border-radius: 12px; outline: none; font-size: 15px; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--theme); background: rgba(0, 229, 255, 0.03); box-shadow: 0 0 15px var(--theme-glow); }
+        
+        .modal-actions { display: flex; gap: 15px; margin-top: 30px; }
+        .modal-btn { flex: 1; padding: 15px; border: none; border-radius: 12px; font-weight: 900; font-size: 14px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .save-btn { background: var(--theme); color: #000; box-shadow: 0 5px 20px var(--theme-glow); transition: 0.5s; }
+        .save-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--theme-glow); filter: brightness(1.2); }
+        .cancel-btn { background: #1e293b; color: #cbd5e1; }
+        .cancel-btn:hover { background: #334155; color: #fff; transform: translateY(-3px); }
 
-        .empty-msg { grid-column: 1/-1; text-align: center; color: #475569; padding: 100px 20px; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; }
+        .empty-msg { grid-column: 1/-1; text-align: center; color: #475569; padding: 80px 20px; font-size: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* --- MOBILE PERFECTION --- */
+        /* --- MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
-            header { padding: 15px 20px; flex-direction: column; align-items: stretch; gap: 15px; }
-            .logo-box { flex-direction: row; justify-content: space-between; align-items: center; }
+            header { padding: 15px; flex-direction: column; gap: 12px; }
+            .logo-box { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
             .rank { margin-top: 0; }
-            .search-container { margin: 0; max-width: 100%; }
-            .tools { justify-content: space-between; }
+            .search-container { margin: 0; max-width: 100%; width: 100%; }
+            .tools { justify-content: space-between; width: 100%; }
             .total-counter { display: none; }
             
-            .grid-container { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); padding: 25px 20px 100px; gap: 20px; }
-            .anime-title { font-size: 16px; }
-            .card-tag { font-size: 9px; padding: 4px 8px; }
-            .admin-actions { opacity: 1; transform: none; display: flex; } 
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding: 20px 15px 80px; gap: 15px; }
+            .anime-title { font-size: 15px; }
+            .admin-actions { opacity: 1; display: flex; transform: none; } 
             
             #add-btn-wrapper { bottom: 20px; right: 20px; }
-            .modal-content { padding: 30px 20px; }
+            .modal-box { padding: 30px 20px; }
             .vault-logo-big { font-size: 45px; }
-            
-            #cursor-dot, #cursor-ring { display: none; }
         }
     </style>
     <!-- Firebase SDKs -->
@@ -173,14 +175,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-
-    <!-- Particle Tech Background -->
-    <canvas id="particle-canvas"></canvas>
-    <div class="bg-overlay"></div>
-
-    <!-- Custom Cursor -->
-    <div id="cursor-dot"></div>
-    <div id="cursor-ring"></div>
 
     <!-- Cinematic Intro -->
     <div id="intro-screen">
@@ -191,7 +185,7 @@
     <!-- Header -->
     <header>
         <div class="logo-box">
-            <div class="logo">2X <span>Vault</span></div>
+            <div class="logo" onclick="window.scrollTo(0,0)">2X <span>Vault</span></div>
             <div class="rank">STATUS: <span id="user-rank">SYSTEM BOOT</span></div>
         </div>
         
@@ -205,12 +199,11 @@
         <div class="tools">
             <div class="total-counter">VAULT: <span id="total-stats">0</span></div>
             
-            <!-- Live Theme Switcher -->
             <div class="tool-btn" onclick="switchTheme()" title="Change Aura">
                 <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
             </div>
 
-            <!-- Admin Lock -->
+            <!-- Admin Lock Button -->
             <div class="tool-btn admin-lock" id="admin-icon" onclick="checkAdmin()" title="Admin Terminal">
                 <svg id="lock-svg" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             </div>
@@ -219,14 +212,28 @@
 
     <div class="grid-container" id="anime-grid"></div>
 
-    <!-- Magnetic Add Button -->
     <div id="add-btn-wrapper">
         <button id="add-btn" onclick="openModal()">+</button>
     </div>
 
-    <!-- Cinematic Modal -->
-    <div id="admin-modal">
-        <div class="modal-content">
+    <!-- UPGRADED ADMIN LOGIN MODAL -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>SYSTEM <span>LOGIN</span></h2>
+            <div class="input-group">
+                <label>Admin Passcode</label>
+                <input type="password" id="admin-pass" placeholder="Enter Security Code..." autocomplete="off">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" onclick="closeLogin()">Cancel</button>
+                <button class="modal-btn save-btn" onclick="verifyAdmin()">Authorize</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Entry Modal -->
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-box">
             <h2 id="modal-title">NEW <span>ENTRY</span></h2>
             <div class="input-group">
                 <label>Title Designation</label>
@@ -253,7 +260,7 @@
             const rootStyle = getComputedStyle(document.documentElement);
             const themeColor = rootStyle.getPropertyValue('--theme').trim() || '#00e5ff';
             
-            for(let i=0; i<12; i++) {
+            for(let i=0; i<10; i++) {
                 let spark = document.createElement('div');
                 spark.className = 'sparkle-particle';
                 document.body.appendChild(spark);
@@ -261,98 +268,18 @@
                 spark.style.left = x + 'px';
                 spark.style.top = y + 'px';
                 spark.style.background = themeColor;
-                spark.style.boxShadow = `0 0 10px ${themeColor}, 0 0 20px ${themeColor}`;
+                spark.style.boxShadow = `0 0 10px ${themeColor}`;
                 
                 let angle = Math.random() * Math.PI * 2;
-                let velocity = 40 + Math.random() * 80;
-                let tx = Math.cos(angle) * velocity;
-                let ty = Math.sin(angle) * velocity;
+                let velocity = 30 + Math.random() * 60;
+                spark.style.setProperty('--tx', `${Math.cos(angle) * velocity}px`);
+                spark.style.setProperty('--ty', `${Math.sin(angle) * velocity}px`);
                 
-                spark.style.setProperty('--tx', `${tx}px`);
-                spark.style.setProperty('--ty', `${ty}px`);
-                
-                setTimeout(() => spark.remove(), 600);
+                setTimeout(() => spark.remove(), 500);
             }
         }
 
-        // --- CUSTOM CURSOR ENGINE ---
-        const cursorDot = document.getElementById('cursor-dot');
-        const cursorRing = document.getElementById('cursor-ring');
-        let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-            
-            if(e.target.closest('button') || e.target.closest('.anime-card') || e.target.closest('.tool-btn') || e.target.closest('#add-btn')) {
-                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(2)`;
-                cursorRing.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(1.5)`;
-            } else {
-                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) scale(1)`;
-            }
-        });
-
-        function animateCursorRing() {
-            ringX += (mouseX - ringX) * 0.15;
-            ringY += (mouseY - ringY) * 0.15;
-            cursorRing.style.transform = `translate(${ringX}px, ${ringY}px)`;
-            requestAnimationFrame(animateCursorRing);
-        }
-        if(window.innerWidth > 768) animateCursorRing();
-
-        // --- MAGNETIC ADMIN BUTTON ENGINE ---
-        const btnWrapper = document.getElementById('add-btn-wrapper');
-        const addBtn = document.getElementById('add-btn');
-        
-        btnWrapper.addEventListener('mousemove', (e) => {
-            const rect = btnWrapper.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width/2;
-            const y = e.clientY - rect.top - rect.height/2;
-            addBtn.style.transform = `translate(${x * 0.4}px, ${y * 0.4}px) scale(1.1)`;
-        });
-        btnWrapper.addEventListener('mouseleave', () => {
-            addBtn.style.transform = `translate(0px, 0px) scale(1)`;
-        });
-
-        // --- FLUID TECH PARTICLE ENGINE ---
-        const canvasParticle = document.getElementById('particle-canvas');
-        const ctxParticle = canvasParticle.getContext('2d');
-        let particles = [];
-
-        function resizeCanvas() { canvasParticle.width = window.innerWidth; canvasParticle.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvasParticle.width;
-                this.y = Math.random() * canvasParticle.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.size = Math.random() * 2;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if(this.x < 0 || this.x > canvasParticle.width) this.vx *= -1;
-                if(this.y < 0 || this.y > canvasParticle.height) this.vy *= -1;
-            }
-            draw() {
-                const rootStyle = getComputedStyle(document.documentElement);
-                ctxParticle.fillStyle = rootStyle.getPropertyValue('--theme').trim() || '#00e5ff';
-                ctxParticle.beginPath(); ctxParticle.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctxParticle.fill();
-            }
-        }
-
-        for(let i=0; i<80; i++) particles.push(new Particle());
-
-        function animateParticles() {
-            ctxParticle.clearRect(0, 0, canvasParticle.width, canvasParticle.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animateParticles);
-        }
-        if(window.innerWidth > 768) animateParticles();
-
-        // --- LIVE THEME SWITCHER (AURA) ---
+        // --- LIVE THEME SWITCHER ---
         const themes = [
             { hex: '#00e5ff', name: 'CYBER CYAN' },
             { hex: '#ff0033', name: 'CRIMSON BLOOD' },
@@ -366,21 +293,19 @@
             const newColor = themes[currentThemeIdx].hex;
             
             document.documentElement.style.setProperty('--theme', newColor);
-            document.documentElement.style.setProperty('--theme-glow', `rgba(${hexToRgb(newColor)}, 0.4)`);
+            
+            // Generate rgba for glow
+            let r = parseInt(newColor.slice(1, 3), 16), g = parseInt(newColor.slice(3, 5), 16), b = parseInt(newColor.slice(5, 7), 16);
+            document.documentElement.style.setProperty('--theme-glow', `rgba(${r}, ${g}, ${b}, 0.3)`);
             
             const rankEl = document.getElementById('user-rank');
             let oldText = rankEl.innerText;
             rankEl.innerText = themes[currentThemeIdx].name;
-            setTimeout(() => { updateRank(animeList.length); }, 2000); 
-        }
-
-        function hexToRgb(hex) {
-            let r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
-            return `${r}, ${g}, ${b}`;
+            setTimeout(() => { updateRank(animeList.length); }, 1500); 
         }
 
         // --- INTRO LOADER ---
-        setTimeout(() => { document.getElementById('intro-screen').classList.add('intro-hidden'); }, 2400);
+        setTimeout(() => { document.getElementById('intro-screen').classList.add('intro-hidden'); }, 2200);
 
         // --- EXACT FIREBASE CONFIG ---
         const firebaseConfig = {
@@ -415,6 +340,7 @@
 
         function init() { if(isAdmin) enableAdminMode(); }
 
+        // 🔥 FUNNY WEEB RANK SYSTEM 🔥
         function updateRank(count) {
             const rankEl = document.getElementById('user-rank');
             if(count === 0) rankEl.innerText = "FILTHY NORMIE";
@@ -422,7 +348,7 @@
             else if(count < 30) rankEl.innerText = "CLOSET OTAKU";
             else if(count < 60) rankEl.innerText = "BASEMENT DWELLER";
             else if(count < 100) rankEl.innerText = "GRASS TOUCH NOT";
-            else rankEl.innerText = "ANIME GOD (NO LIFE)";
+            else rankEl.innerText = "ANIME GOD";
         }
 
         function renderApp() {
@@ -437,6 +363,7 @@
 
             let filteredAnimes = animeList;
             
+            // Advanced Search
             if (searchQuery !== "") {
                 const query = searchQuery.toLowerCase().trim();
                 filteredAnimes = filteredAnimes.filter(a => {
@@ -462,9 +389,8 @@
 
                 const card = document.createElement("div");
                 card.className = "anime-card";
-                card.style.animationDelay = `${index * 0.05}s`; 
+                card.style.animationDelay = `${(index % 10) * 0.05}s`; 
                 
-                // Add Burst Effect on Click
                 card.onclick = (e) => {
                     let clientX = e.clientX || (e.touches && e.touches[0].clientX);
                     let clientY = e.clientY || (e.touches && e.touches[0].clientY);
@@ -491,6 +417,7 @@
             renderGrid();
         }
 
+        // --- NEW ADMIN LOGIN LOGIC ---
         function checkAdmin() {
             if(isAdmin) {
                 if(confirm("Terminate Admin Session?")) {
@@ -499,13 +426,33 @@
                     document.getElementById('lock-svg').innerHTML = '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>';
                     document.getElementById('admin-icon').classList.remove('unlocked');
                 }
-                return;
+            } else {
+                document.getElementById('login-modal').classList.add('show');
+                document.getElementById('admin-pass').value = '';
+                setTimeout(() => { document.getElementById('admin-pass').focus(); }, 100);
             }
-            const pass = prompt("AUTHENTICATION REQUIRED:");
-            if (pass === "7391737301") {
-                enableAdminMode(); alert("ACCESS GRANTED: WELCOME ADMIN.");
-            } else if (pass !== null) { alert("ACCESS DENIED."); }
         }
+
+        function closeLogin() {
+            document.getElementById('login-modal').classList.remove('show');
+        }
+
+        function verifyAdmin() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === "7391737301") {
+                enableAdminMode(); 
+                closeLogin();
+                setTimeout(() => alert("ACCESS GRANTED: Welcome to the Vault."), 300);
+            } else { 
+                alert("ACCESS DENIED: Incorrect Passcode."); 
+                document.getElementById('admin-pass').value = '';
+                document.getElementById('admin-pass').focus();
+            }
+        }
+
+        document.getElementById('admin-pass').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifyAdmin();
+        });
 
         function enableAdminMode() {
             isAdmin = true; sessionStorage.setItem("2x_admin", "true");
@@ -541,7 +488,7 @@
             setTimeout(() => {
                 editingId = null; document.getElementById("anime-name").value = '';
                 document.getElementById("anime-img").value = ''; document.getElementById("anime-tags").value = '';
-            }, 400);
+            }, 300);
         }
 
         function saveAnime() {
