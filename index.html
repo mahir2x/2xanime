@@ -3,321 +3,633 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2X Anime Vault - Ultra Performance</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <title>2X VAULT // OMEGA SUPREME</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- GOD LEVEL CSS VARIABLES --- */
         :root {
-            --theme: #00e5ff; 
-            --theme-glow: rgba(0, 229, 255, 0.2); 
-            --bg-dark: #050914;
-            --font-main: 'Outfit', sans-serif;
+            --theme: #00f0ff;
+            --theme-dim: rgba(0, 240, 255, 0.14);
+            --theme-glow: rgba(0, 240, 255, 0.35);
+            --gold: #fbbf24;
+            --bg-base: #030712;
+            --bg-surface: #0b1120;
+            --bg-card: #0f172a;
+            --border-color: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #64748b;
+            --font-ui: 'Outfit', sans-serif;
+            --font-tech: 'Rajdhani', sans-serif;
+            --grid-min: 210px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); }
-        
-        /* --- 100% LAG FREE BACKGROUND --- */
-        body { 
-            background-color: var(--bg-dark); 
-            color: #fff; min-height: 100vh; overflow-x: hidden; 
-        }
-        
-        /* Hardware Accelerated Background layer */
-        .fixed-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-ui); -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 15% 50%, var(--theme-glow), transparent 30%), 
-                radial-gradient(circle at 85% 30%, var(--theme-glow), transparent 30%);
-            pointer-events: none;
-            will-change: transform; /* FORCES GPU ACCELERATION */
-            transition: background-image 0.5s ease;
+                linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--theme); border-radius: 10px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--theme); border-radius: 3px; }
 
-        /* --- EPIC INTRO --- */
-        #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #03060f; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease, visibility 0.6s; }
-        .vault-logo-big { font-size: 70px; font-weight: 900; letter-spacing: 12px; color: transparent; -webkit-text-stroke: 1px var(--theme); position: relative; }
-        .vault-logo-big::before { content: '2X VAULT'; position: absolute; left: 0; top: 0; width: 0%; height: 100%; color: var(--theme); overflow: hidden; animation: fillText 2s ease-in-out forwards; -webkit-text-stroke: 0px; text-shadow: 0 0 20px var(--theme-glow); }
-        @keyframes fillText { 0% { width: 0%; } 100% { width: 100%; } }
-        .loading-bar { width: 250px; height: 3px; background: rgba(255, 255, 255, 0.05); margin-top: 20px; border-radius: 10px; overflow: hidden; position: relative; }
-        .loading-bar::after { content: ''; position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--theme); animation: load 2s ease forwards; box-shadow: 0 0 10px var(--theme); }
-        @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
-        .intro-hidden { opacity: 0; visibility: hidden; }
-
-        /* --- BURST ANIMATION --- */
-        .sparkle-particle { position: fixed; width: 5px; height: 5px; border-radius: 50%; pointer-events: none; z-index: 999999; animation: sparkAnim 0.5s ease-out forwards; will-change: transform, opacity; }
-        @keyframes sparkAnim { 0% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } 100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0); opacity: 0; } }
-
-        /* --- ULTRA LIGHTWEIGHT HEADER (NO BLUR) --- */
-        header { padding: 18px 35px; display: flex; justify-content: space-between; align-items: center; background: rgba(5, 9, 20, 0.98); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0, 229, 255, 0.1); transition: border-color 0.5s; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        #boot-screen {
+            position: fixed; inset: 0; background: #02040a; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        #boot-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         
-        .logo-box { display: flex; flex-direction: column; }
-        .logo { font-size: 28px; font-weight: 900; letter-spacing: 2px; line-height: 1; cursor: pointer; }
-        .logo span { color: var(--theme); text-shadow: 0 0 15px var(--theme-glow); transition: 0.5s; }
-        .rank { font-size: 11px; font-weight: 800; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
-        .rank span { color: var(--theme); transition: 0.5s; }
+        .boot-logo { font-size: 64px; font-weight: 900; letter-spacing: 10px; color: #fff; text-transform: uppercase; }
+        .boot-logo span { color: var(--theme); text-shadow: 0 0 25px var(--theme-glow); }
+        .boot-sub { font-family: var(--font-tech); color: var(--text-muted); letter-spacing: 6px; font-size: 14px; margin-top: 5px; text-transform: uppercase; }
+        .boot-bar { width: 240px; height: 3px; background: #111827; margin-top: 25px; border-radius: 2px; overflow: hidden; position: relative; }
+        .boot-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--theme); animation: bootFill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes bootFill { 0% { width: 0%; } 100% { width: 100%; } }
 
-        .search-container { flex: 1; max-width: 500px; margin: 0 20px; position: relative; }
-        .search-box { width: 100%; display: flex; align-items: center; background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 10px 20px; transition: 0.3s; }
-        .search-box:focus-within { border-color: var(--theme); box-shadow: 0 5px 15px var(--theme-glow); transform: translateY(-1px); }
-        .search-box input { width: 100%; background: transparent; border: none; color: #fff; outline: none; font-size: 15px; font-weight: 600; }
-        .search-box input::placeholder { color: #475569; font-weight: 400; }
-        .search-box svg { width: 18px; fill: var(--theme); margin-right: 12px; transition: 0.5s; }
-
-        .tools { display: flex; gap: 12px; align-items: center; }
-        .tool-btn { width: 42px; height: 42px; border-radius: 10px; background: #0f172a; border: 1px solid #1e293b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .tool-btn:hover { background: var(--theme-glow); border-color: var(--theme); transform: translateY(-3px); }
-        .tool-btn svg { width: 20px; fill: #64748b; transition: 0.3s; }
-        .tool-btn:hover svg { fill: #fff; }
-
-        .total-counter { font-size: 13px; font-weight: 800; background: #0f172a; padding: 8px 16px; border-radius: 10px; border: 1px solid #1e293b; }
-        .total-counter span { color: var(--theme); font-size: 15px; margin-left: 5px; transition: 0.5s; }
-
-        /* --- PERFORMANCE GRID --- */
-        .grid-container { padding: 40px 35px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; z-index: 10; }
-
-        .anime-card { 
-            border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 2/3; 
-            background: #0f172a; border: 1px solid #1e293b; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; 
-            will-change: transform; /* STOPS SCROLL LAG */
-            animation: popIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        header {
+            background: rgba(3, 7, 18, 0.96);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 30px;
+            position: sticky; top: 0; z-index: 1000;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.75);
         }
 
-        @keyframes popIn { 
-            0% { opacity: 0; transform: translateY(20px); } 
-            100% { opacity: 1; transform: translateY(0); } 
+        .brand { display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .brand-icon {
+            width: 42px; height: 42px; border-radius: 10px; background: var(--theme-dim);
+            border: 1px solid var(--theme); display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 18px; color: var(--theme); box-shadow: 0 0 15px var(--theme-dim);
+        }
+        .brand-text h1 { font-size: 24px; font-weight: 900; letter-spacing: 1.5px; line-height: 1; }
+        .brand-text h1 span { color: var(--theme); }
+        .brand-text p { font-family: var(--font-tech); font-size: 12px; color: var(--text-muted); letter-spacing: 2px; font-weight: 700; margin-top: 2px; }
+
+        .search-wrapper { flex: 1; max-width: 520px; position: relative; }
+        .search-box {
+            display: flex; align-items: center; background: var(--bg-surface);
+            border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 18px;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .search-box:focus-within { border-color: var(--theme); box-shadow: 0 0 15px var(--theme-dim); }
+        .search-box svg { width: 18px; fill: var(--theme); margin-right: 12px; flex-shrink: 0; }
+        .search-box input { width: 100%; background: transparent; border: none; color: #fff; outline: none; font-size: 15px; font-weight: 500; }
+        .search-box input::placeholder { color: var(--text-muted); }
+        .key-hint { font-family: var(--font-tech); font-size: 11px; color: var(--text-muted); border: 1px solid var(--border-color); padding: 1px 6px; border-radius: 4px; margin-left: 8px; }
+        .clear-search { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; display: none; padding: 0 5px; }
+        .clear-search:hover { color: #fff; }
+
+        .nav-actions { display: flex; align-items: center; gap: 10px; }
+        .cyber-btn {
+            height: 40px; padding: 0 16px; border-radius: 10px; background: var(--bg-surface);
+            border: 1px solid var(--border-color); color: var(--text-main); font-weight: 700; font-size: 12px;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer;
+            transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
+        }
+        .cyber-btn svg { width: 17px; fill: currentColor; flex-shrink: 0; }
+        .cyber-btn:hover { border-color: var(--theme); color: var(--theme); background: var(--theme-dim); transform: translateY(-2px); }
+        .cyber-btn.icon-only { width: 40px; padding: 0; }
+        .cyber-btn.primary { background: var(--theme); color: #000; border-color: var(--theme); font-weight: 900; }
+        .cyber-btn.primary:hover { filter: brightness(1.15); box-shadow: 0 0 20px var(--theme-glow); color: #000; }
+        .cyber-btn.server-btn { border-color: #3b82f6; color: #60a5fa; background: rgba(59, 130, 246, 0.12); }
+        .cyber-btn.server-btn:hover { background: #3b82f6; color: #fff; box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+
+        .admin-only-btn { display: none; }
+        .admin-mode .admin-only-btn { display: inline-flex; }
+        .admin-mode #admin-lock-btn { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
+
+        .dashboard {
+            margin: 25px 30px 10px; padding: 25px 30px; background: var(--bg-surface);
+            border: 1px solid var(--border-color); border-radius: 16px;
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 25px;
+            position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .dashboard::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--theme); box-shadow: 0 0 15px var(--theme);
         }
 
-        /* Clean Hover */
-        .anime-card:hover { 
-            transform: translateY(-8px); 
-            border-color: var(--theme); 
-            box-shadow: 0 15px 30px rgba(0,0,0,0.8), 0 0 15px var(--theme-glow); 
-            z-index: 20; 
+        .dash-left { display: flex; align-items: center; gap: 20px; }
+        .rank-emblem {
+            width: 64px; height: 64px; border-radius: 14px; background: var(--bg-card);
+            border: 2px solid var(--theme); display: flex; align-items: center; justify-content: center;
+            font-size: 28px; box-shadow: 0 0 20px var(--theme-dim); flex-shrink: 0;
+        }
+        .rank-info { display: flex; flex-direction: column; gap: 4px; }
+        .rank-label { font-family: var(--font-tech); font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+        .rank-title { font-size: 24px; font-weight: 900; color: #fff; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .rank-title span { color: var(--theme); }
+        
+        .xp-wrapper { width: 260px; max-width: 100%; margin-top: 4px; }
+        .xp-text { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 5px; font-family: var(--font-tech); letter-spacing: 1px; }
+        .xp-bar-bg { width: 100%; height: 6px; background: #030712; border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .xp-bar-fill { height: 100%; width: 0%; background: var(--theme); transition: width 0.6s ease; box-shadow: 0 0 10px var(--theme); }
+
+        .dash-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            padding: 12px 20px; border-radius: 12px; min-width: 115px;
+            display: flex; flex-direction: column; align-items: flex-start;
+        }
+        .stat-val { font-size: 24px; font-weight: 900; color: var(--theme); line-height: 1.1; font-family: var(--font-tech); }
+        .stat-name { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-top: 2px; }
+
+        .control-bar {
+            padding: 15px 30px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px;
         }
         
-        .anime-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; will-change: transform; }
-        .anime-card:hover .anime-img { transform: scale(1.08); }
+        .quick-filters {
+            display: flex; align-items: center; gap: 8px; overflow-x: auto; max-width: 100%; padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .quick-filters::-webkit-scrollbar { display: none; }
+        .filter-pill {
+            background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-muted);
+            padding: 7px 15px; border-radius: 8px; font-size: 12px; font-weight: 800; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; transition: 0.2s ease;
+        }
+        .filter-pill:hover { color: #fff; border-color: #334155; }
+        .filter-pill.active { background: var(--theme); color: #000; border-color: var(--theme); box-shadow: 0 0 12px var(--theme-dim); }
+        .filter-pill.gold-pill { border-color: rgba(251, 191, 36, 0.4); color: var(--gold); }
+        .filter-pill.gold-pill.active { background: var(--gold); color: #000; border-color: var(--gold); }
+
+        .view-controls { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+        .cyber-select {
+            background: var(--bg-surface); color: #fff; border: 1px solid var(--border-color);
+            padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; outline: none; cursor: pointer;
+        }
+        .cyber-select:focus { border-color: var(--theme); }
+
+        .grid-container {
+            padding: 10px 30px 90px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--grid-min), 1fr));
+            gap: 24px;
+        }
+
+        .anime-card {
+            border-radius: 14px; overflow: hidden; position: relative; cursor: pointer;
+            aspect-ratio: 2 / 3; background: var(--bg-card); border: 1px solid var(--border-color);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+            transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+            content-visibility: auto;
+            contain-intrinsic-size: 210px 315px;
+        }
+
+        .anime-card.top-tier { border-color: rgba(251, 191, 36, 0.45); }
+        .anime-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--theme);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.85), 0 0 20px var(--theme-glow);
+            z-index: 10;
+        }
+        .anime-card.top-tier:hover {
+            border-color: var(--gold);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.85), 0 0 25px rgba(251, 191, 36, 0.4);
+        }
+
+        .anime-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 60%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.22), transparent);
+            transform: translateX(-220%) skewX(-25deg);
+            transition: transform 0.65s ease; z-index: 3; pointer-events: none;
+        }
+        .anime-card:hover::before { transform: translateX(320%) skewX(-25deg); }
+
+        .anime-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+            background: #090d16;
+        }
+        .anime-card:hover .anime-img { transform: scale(1.09); }
+
+        .card-badges {
+            position: absolute; top: 10px; left: 10px; z-index: 3;
+            display: flex; gap: 6px; align-items: center;
+        }
+        .card-index {
+            background: rgba(3, 7, 18, 0.85); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted); font-family: var(--font-tech); font-size: 11px; font-weight: 700;
+            padding: 3px 8px; border-radius: 6px; transition: 0.25s;
+        }
+        .anime-card:hover .card-index { border-color: var(--theme); color: var(--theme); }
         
-        /* Shimmer effect optimized */
-        .anime-card::before { content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%; background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent); transform: skewX(-25deg); transition: left 0.6s ease; z-index: 3; pointer-events: none; }
-        .anime-card:hover::before { left: 150%; }
-        
-        /* Solid gradient overlay instead of heavy blur */
-        .card-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 70%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; z-index: 2; transition: padding 0.3s ease; }
-        .anime-card:hover .card-overlay { padding-bottom: 20px; }
-        
-        .anime-title { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 6px; line-height: 1.2; text-shadow: 0 2px 5px rgba(0,0,0,1); transition: color 0.3s; }
+        .crown-badge {
+            background: rgba(251, 191, 36, 0.95); color: #000; font-family: var(--font-tech);
+            font-size: 11px; font-weight: 900; padding: 3px 8px; border-radius: 6px;
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.5); letter-spacing: 0.5px;
+        }
+
+        .hype-btn {
+            position: absolute; top: 10px; right: 10px; z-index: 4;
+            background: rgba(3, 7, 18, 0.85); border: 1px solid rgba(255,255,255,0.12);
+            color: #fff; font-family: var(--font-tech); font-size: 12px; font-weight: 700;
+            padding: 4px 10px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 4px;
+            transition: 0.2s;
+        }
+        .hype-btn:hover { border-color: #f97316; color: #f97316; transform: scale(1.08); background: rgba(249, 115, 22, 0.15); }
+        .admin-mode .hype-btn { top: 48px; }
+
+        .card-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(3, 7, 18, 0.98) 0%, rgba(3, 7, 18, 0.65) 45%, transparent 100%);
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 18px; z-index: 2;
+        }
+
+        .anime-title {
+            font-size: 16px; font-weight: 800; color: #fff; line-height: 1.25; margin-bottom: 8px;
+            text-shadow: 0 2px 6px #000; transition: color 0.25s ease;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
         .anime-card:hover .anime-title { color: var(--theme); }
-        
-        .anime-tags { display: flex; flex-wrap: wrap; gap: 4px; }
-        .card-tag { background: rgba(255,255,255,0.1); color: #fff; font-size: 9px; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 800; transition: color 0.3s, background 0.3s; }
-        .anime-card:hover .card-tag { color: var(--theme); background: var(--theme-glow); }
+        .anime-card.top-tier:hover .anime-title { color: var(--gold); }
 
-        /* Admin Card Actions */
-        .admin-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 8px; z-index: 5; opacity: 0; transition: opacity 0.3s; }
-        .admin-mode .admin-actions { display: flex; }
-        .anime-card:hover .admin-actions { opacity: 1; }
-        
-        .action-btn { width: 32px; height: 32px; border-radius: 8px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s, background 0.2s; color: #fff; font-size: 14px; background: rgba(15, 23, 42, 0.9); }
-        .edit-btn:hover { background: #3b82f6; transform: scale(1.1); }
-        .delete-btn:hover { background: #ef4444; transform: scale(1.1); }
+        .anime-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+        .card-tag {
+            background: rgba(255, 255, 255, 0.08); color: #cbd5e1;
+            font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 5px;
+            text-transform: uppercase; letter-spacing: 0.5px; transition: 0.25s;
+        }
+        .anime-card:hover .card-tag { background: var(--theme-dim); color: var(--theme); }
 
-        /* --- ADD BUTTON --- */
-        #add-btn-wrapper { position: fixed; bottom: 30px; right: 30px; display: none; z-index: 1000; }
-        .admin-mode #add-btn-wrapper { display: flex; }
-        #add-btn { background: var(--theme); color: #000; width: 55px; height: 55px; border-radius: 16px; font-size: 28px; font-weight: bold; border: none; cursor: pointer; box-shadow: 0 5px 20px var(--theme-glow); transition: transform 0.3s; display: flex; align-items: center; justify-content: center; }
-        #add-btn:hover { transform: scale(1.1) rotate(90deg); }
+        .card-admin-bar {
+            position: absolute; top: 10px; right: 10px; display: none; gap: 5px; z-index: 5;
+        }
+        .admin-mode .card-admin-bar { display: flex; }
+        .card-btn {
+            width: 30px; height: 30px; border-radius: 7px; border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(3, 7, 18, 0.9); color: #fff; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 13px; transition: 0.2s;
+        }
+        .card-btn.star:hover, .card-btn.star.active { background: var(--gold); border-color: var(--gold); color: #000; transform: scale(1.1); }
+        .card-btn.edit:hover { background: #3b82f6; border-color: #3b82f6; transform: scale(1.1); }
+        .card-btn.del:hover { background: #ef4444; border-color: #ef4444; transform: scale(1.1); }
 
-        /* --- OPTIMIZED MODALS (NO BLUR OVERLAY) --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 9, 20, 0.95); display: none; justify-content: center; align-items: center; z-index: 2000; opacity: 0; transition: opacity 0.3s ease; }
-        .modal-overlay.show { opacity: 1; display: flex; }
-        
-        .modal-box { background: #0f172a; padding: 35px; border-radius: 16px; width: 100%; max-width: 400px; border: 1px solid var(--theme-glow); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); transform: translateY(20px); transition: transform 0.4s ease; }
-        .modal-overlay.show .modal-box { transform: translateY(0); }
-        
-        .modal-box h2 { color: #fff; margin-bottom: 25px; text-align: center; font-weight: 900; font-size: 24px; letter-spacing: 1px; text-transform: uppercase; }
-        .modal-box h2 span { color: var(--theme); transition: color 0.5s; }
-        
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 11px; margin-bottom: 6px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .input-group input { width: 100%; padding: 12px 16px; background: #050914; border: 1px solid #1e293b; color: #fff; border-radius: 10px; outline: none; font-size: 14px; transition: border-color 0.3s, box-shadow 0.3s; }
-        .input-group input:focus { border-color: var(--theme); background: rgba(0, 229, 255, 0.03); box-shadow: 0 0 10px var(--theme-glow); }
-        
-        .modal-actions { display: flex; gap: 12px; margin-top: 25px; }
-        .modal-btn { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 900; font-size: 13px; cursor: pointer; transition: transform 0.2s, background 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-        .save-btn { background: var(--theme); color: #000; box-shadow: 0 5px 15px var(--theme-glow); }
-        .save-btn:hover { transform: translateY(-2px); filter: brightness(1.2); }
-        .cancel-btn { background: #1e293b; color: #cbd5e1; }
-        .cancel-btn:hover { background: #334155; color: #fff; transform: translateY(-2px); }
+        #fab-add {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            border-radius: 16px; background: var(--theme); color: #000; border: none;
+            font-size: 32px; font-weight: 900; cursor: pointer; z-index: 900;
+            box-shadow: 0 10px 25px var(--theme-glow); display: none; align-items: center; justify-content: center;
+            transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .admin-mode #fab-add { display: flex; }
+        #fab-add:hover { transform: scale(1.12) rotate(90deg); }
 
-        .empty-msg { grid-column: 1/-1; text-align: center; color: #475569; padding: 80px 20px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-backdrop {
+            position: fixed; inset: 0; background: rgba(2, 5, 12, 0.92);
+            z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px;
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .modal-backdrop.open { display: flex; opacity: 1; }
 
-        /* --- MOBILE OPTIMIZATION --- */
+        .modal-window {
+            background: var(--bg-surface); border: 1px solid var(--theme);
+            border-radius: 18px; width: 100%; max-width: 760px; max-height: 92vh; overflow-y: auto;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px var(--theme-dim);
+            transform: translateY(20px); transition: transform 0.25s ease;
+        }
+        .modal-backdrop.open .modal-window { transform: translateY(0); }
+
+        .modal-header {
+            padding: 18px 25px; background: var(--bg-card); border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10;
+        }
+        .modal-header h2 { font-size: 19px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; }
+        .modal-header h2 span { color: var(--theme); }
+        .close-x { background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+        .close-x:hover { color: #fff; }
+
+        .admin-form-grid {
+            padding: 25px; display: grid; grid-template-columns: 180px 1fr; gap: 25px;
+        }
+        .preview-box {
+            width: 100%; aspect-ratio: 2/3; background: var(--bg-base); border: 1px dashed var(--border-color);
+            border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .preview-box img { width: 100%; height: 100%; object-fit: cover; }
+        .preview-label { position: absolute; bottom: 8px; background: rgba(0,0,0,0.8); font-size: 10px; padding: 3px 8px; border-radius: 4px; color: var(--theme); text-transform: uppercase; font-weight: 800; }
+
+        .form-fields { display: flex; flex-direction: column; gap: 15px; }
+        .field-group label { display: block; font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .input-with-btn { display: flex; gap: 8px; }
+        .field-group input {
+            width: 100%; padding: 12px 15px; background: var(--bg-base); border: 1px solid var(--border-color);
+            border-radius: 10px; color: #fff; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .field-group input:focus { border-color: var(--theme); box-shadow: 0 0 12px var(--theme-dim); }
+
+        .preset-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .preset-chip {
+            background: var(--bg-card); border: 1px solid var(--border-color); color: #94a3b8;
+            font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: 0.15s;
+        }
+        .preset-chip:hover { border-color: var(--theme); color: var(--theme); background: var(--theme-dim); }
+
+        .checkbox-row {
+            display: flex; align-items: center; gap: 10px; background: var(--bg-card);
+            padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); cursor: pointer;
+        }
+        .checkbox-row input { width: 18px; height: 18px; accent-color: var(--gold); cursor: pointer; }
+        .checkbox-row span { font-size: 13px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .modal-footer {
+            padding: 16px 25px; background: var(--bg-card); border-top: 1px solid var(--border-color);
+            display: flex; justify-content: flex-end; gap: 12px;
+        }
+
+        .detail-layout { display: grid; grid-template-columns: 210px 1fr; gap: 24px; padding: 25px; }
+        .detail-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 12px; border: 1px solid var(--theme); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .detail-info { display: flex; flex-direction: column; }
+        .detail-meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
+        .detail-badge { background: var(--theme-dim); color: var(--theme); border: 1px solid var(--theme); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; }
+        .mal-badge { background: rgba(251, 191, 36, 0.15); color: var(--gold); border: 1px solid rgba(251, 191, 36, 0.4); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
+        .detail-title { font-size: 25px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .copy-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 11px; padding: 4px 9px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        .copy-btn:hover { border-color: var(--theme); color: var(--theme); }
+        
+        .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .detail-synopsis {
+            font-size: 13px; color: #94a3b8; line-height: 1.6; margin-bottom: 20px;
+            background: var(--bg-base); padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color);
+            max-height: 140px; overflow-y: auto;
+        }
+
+        .server-label { font-family: var(--font-tech); font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 700; }
+        .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        #toast-box { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-card); border: 1px solid var(--theme); color: #fff; padding: 12px 24px; border-radius: 10px; font-weight: 800; font-size: 13px; letter-spacing: 1px; z-index: 99999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); text-transform: uppercase; }
+        #toast-box.show { transform: translateX(-50%) translateY(0); }
+
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 80px 20px; color: var(--text-muted); }
+        .empty-state h3 { font-size: 22px; color: #fff; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
         @media (max-width: 768px) {
-            header { padding: 15px; flex-direction: column; gap: 12px; }
-            .logo-box { flex-direction: row; justify-content: space-between; align-items: center; width: 100%; }
-            .rank { margin-top: 0; }
-            .search-container { margin: 0; max-width: 100%; width: 100%; }
-            .tools { justify-content: space-between; width: 100%; }
-            .total-counter { display: none; }
+            header { padding: 12px 15px; flex-wrap: wrap; gap: 12px; }
+            .brand-text h1 { font-size: 20px; }
+            .search-wrapper { order: 3; max-width: 100%; flex-basis: 100%; }
+            .key-hint { display: none; }
+            .nav-actions .cyber-btn span { display: none; }
+            .nav-actions .cyber-btn { padding: 0 12px; }
             
-            .grid-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); padding: 20px 15px 80px; gap: 15px; }
+            .dashboard { margin: 15px 15px 5px; padding: 18px; gap: 18px; }
+            .rank-title { font-size: 18px; }
+            .xp-wrapper { width: 100%; }
+            .dash-stats { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .stat-card { min-width: unset; padding: 10px 12px; }
+            .stat-val { font-size: 20px; }
+
+            .control-bar { padding: 10px 15px; }
+            .grid-container { padding: 10px 15px 80px; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 14px; }
             .anime-title { font-size: 14px; }
-            .admin-actions { opacity: 1; display: flex; } 
             
-            #add-btn-wrapper { bottom: 20px; right: 20px; }
-            .modal-box { padding: 25px 20px; }
-            .vault-logo-big { font-size: 40px; }
+            .admin-form-grid, .detail-layout { grid-template-columns: 1fr; }
+            .preview-box { max-width: 140px; margin: 0 auto; }
+            .detail-poster { max-width: 150px; margin: 0 auto; }
+            .detail-title { font-size: 20px; justify-content: center; text-align: center; }
+            .detail-meta-row, .detail-tags, .detail-actions { justify-content: center; }
+            .server-label { text-align: center; }
+            .boot-logo { font-size: 40px; }
         }
     </style>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <!-- Fixed No-Lag Background -->
-    <div class="fixed-bg"></div>
-
-    <!-- Cinematic Intro -->
-    <div id="intro-screen">
-        <div class="vault-logo-big">2X <span>VAULT</span></div>
-        <div class="loading-bar"></div>
+    <div id="boot-screen">
+        <div class="boot-logo">2X <span>VAULT</span></div>
+        <div class="boot-sub">INITIALIZING OMEGA PROTOCOL...</div>
+        <div class="boot-bar"></div>
     </div>
 
-    <!-- Header -->
+    <div id="toast-box">SYSTEM READY</div>
+
     <header>
-        <div class="logo-box">
-            <div class="logo" onclick="window.scrollTo(0,0)">2X <span>Vault</span></div>
-            <div class="rank">STATUS: <span id="user-rank">SYSTEM BOOT</span></div>
+        <div class="brand" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+            <div class="brand-icon">2X</div>
+            <div class="brand-text">
+                <h1>2X <span>VAULT</span></h1>
+                <p>GLOBAL ANIME ARCHIVE</p>
+            </div>
         </div>
-        
-        <div class="search-container">
+
+        <div class="search-wrapper">
             <div class="search-box">
                 <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" id="search-input" placeholder="Search by name or tags..." oninput="handleSearch()">
+                <input type="text" id="search-input" placeholder="Search title or genre (e.g. Romance, Action)..." oninput="handleSearch()">
+                <button class="clear-search" id="clear-btn" onclick="clearSearch()">✖</button>
+                <span class="key-hint">/</span>
             </div>
         </div>
 
-        <div class="tools">
-            <div class="total-counter">VAULT: <span id="total-stats">0</span></div>
-            
-            <div class="tool-btn" onclick="switchTheme()" title="Change Aura">
-                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            </div>
+        <div class="nav-actions">
+            <button class="cyber-btn" onclick="pickRandomAnime()" title="Pick Random Anime (Shortcut: R)">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></svg>
+                <span>Random</span>
+            </button>
 
-            <!-- Admin Lock Button -->
-            <div class="tool-btn admin-lock" id="admin-icon" onclick="checkAdmin()" title="Admin Terminal">
-                <svg id="lock-svg" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
-            </div>
+            <button class="cyber-btn icon-only" onclick="cycleTheme()" title="Switch Cyber Aura">
+                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            </button>
+
+            <button class="cyber-btn admin-only-btn" onclick="exportBackup()" title="Download Database Backup">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span>Backup</span>
+            </button>
+
+            <button class="cyber-btn icon-only" id="admin-lock-btn" onclick="handleAdminClick()" title="Admin Command Center">
+                <svg id="lock-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </button>
         </div>
     </header>
 
-    <div class="grid-container" id="anime-grid"></div>
-
-    <div id="add-btn-wrapper">
-        <button id="add-btn" onclick="openModal()">+</button>
-    </div>
-
-    <!-- UPGRADED ADMIN LOGIN MODAL -->
-    <div id="login-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h2>SYSTEM <span>LOGIN</span></h2>
-            <div class="input-group">
-                <label>Admin Passcode</label>
-                <input type="password" id="admin-pass" placeholder="Enter Security Code..." autocomplete="off">
+    <section class="dashboard">
+        <div class="dash-left">
+            <div class="rank-emblem" id="rank-emoji">⚡</div>
+            <div class="rank-info">
+                <div class="rank-label">CURRENT OTAKU STATUS</div>
+                <div class="rank-title" id="rank-title">LOADING...</div>
+                <div class="xp-wrapper">
+                    <div class="xp-text">
+                        <span id="xp-current">0 XP</span>
+                        <span id="xp-next">NEXT RANK: 100 XP</span>
+                    </div>
+                    <div class="xp-bar-bg">
+                        <div class="xp-bar-fill" id="xp-bar"></div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-actions">
-                <button class="modal-btn cancel-btn" onclick="closeLogin()">Cancel</button>
-                <button class="modal-btn save-btn" onclick="verifyAdmin()">Authorize</button>
+        </div>
+
+        <div class="dash-stats">
+            <div class="stat-card">
+                <span class="stat-val" id="stat-total">0</span>
+                <span class="stat-name">Total Vault</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="stat-top" style="color: var(--gold);">0</span>
+                <span class="stat-name">👑 Top Tier</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="stat-hype" style="color: #f97316;">0</span>
+                <span class="stat-name">🔥 Total Hype</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="control-bar">
+        <div class="quick-filters" id="quick-filters">
+            <button class="filter-pill active" onclick="setQuickFilter('ALL', this)">All Vault</button>
+            <button class="filter-pill gold-pill" onclick="setQuickFilter('TOP', this)">👑 Top Tier</button>
+            <button class="filter-pill" onclick="setQuickFilter('Romance', this)">Romance</button>
+            <button class="filter-pill" onclick="setQuickFilter('Action', this)">Action</button>
+            <button class="filter-pill" onclick="setQuickFilter('Isekai', this)">Isekai</button>
+            <button class="filter-pill" onclick="setQuickFilter('Comedy', this)">Comedy</button>
+            <button class="filter-pill" onclick="setQuickFilter('Fantasy', this)">Fantasy</button>
+        </div>
+
+        <div class="view-controls">
+            <select class="cyber-select" id="sort-select" onchange="renderGrid()">
+                <option value="newest">Sort: Newest First</option>
+                <option value="hype">Sort: Most Hyped 🔥</option>
+                <option value="oldest">Sort: Oldest First</option>
+                <option value="az">Sort: Name (A - Z)</option>
+                <option value="za">Sort: Name (Z - A)</option>
+            </select>
+            <button class="cyber-btn icon-only" onclick="toggleGridSize()" title="Toggle Grid Size">
+                <svg viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></svg>
+            </button>
+        </div>
+    </section>
+
+    <main class="grid-container" id="anime-grid"></main>
+
+    <button id="fab-add" onclick="openEditorModal()">+</button>
+
+    <!-- INSPECTOR MODAL WITH ULTRA-FAST 100% WORKING SERVERS -->
+    <div class="modal-backdrop" id="inspect-modal" onclick="if(event.target===this) closeInspectModal()">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2>ANIME <span>INTELLIGENCE</span></h2>
+                <button class="close-x" onclick="closeInspectModal()">✖</button>
+            </div>
+            <div class="detail-layout">
+                <img src="" alt="Poster" class="detail-poster" id="inspect-img">
+                <div class="detail-info">
+                    <div class="detail-meta-row">
+                        <span class="detail-badge" id="inspect-badge">VERIFIED ENTRY</span>
+                        <span class="mal-badge" id="inspect-score">⭐ Fetching...</span>
+                        <span class="mal-badge" id="inspect-eps">📺 -- Eps</span>
+                    </div>
+                    <div class="detail-title">
+                        <span id="inspect-title">Anime Title</span>
+                        <button class="copy-btn" onclick="copyAnimeName()" title="Copy Anime Name">📋 Copy</button>
+                    </div>
+                    <div class="detail-tags" id="inspect-tags"></div>
+                    <div class="detail-synopsis" id="inspect-synopsis">
+                        Scanning global anime network for synopsis & data...
+                    </div>
+
+                    <div class="server-label">⚡ SELECT STREAMING SERVER (100% UNBLOCKED):</div>
+                    <div class="detail-actions">
+                        <!-- Server 1: Miruro (Super Fast Global Streamer) -->
+                        <button class="cyber-btn primary" onclick="launchStream('miruro')">
+                            ▶ Server 1 (Miruro)
+                        </button>
+                        <!-- Server 2: Gogoanime (Legendary Stable Mirror) -->
+                        <button class="cyber-btn server-btn" onclick="launchStream('gogo')">
+                            ▶ Server 2 (Gogoanime)
+                        </button>
+                        <!-- Server 3: Animesune / AniWave mirror -->
+                        <button class="cyber-btn server-btn" onclick="launchStream('aniwave')">
+                            ▶ Server 3 (AniWave)
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Data Entry Modal -->
-    <div id="admin-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h2 id="modal-title">NEW <span>ENTRY</span></h2>
-            <div class="input-group">
-                <label>Title Designation</label>
-                <input type="text" id="anime-name" placeholder="e.g. Solo Leveling" autocomplete="off">
+    <!-- ADMIN ADD/EDIT MODAL -->
+    <div class="modal-backdrop" id="editor-modal">
+        <div class="modal-window">
+            <div class="modal-header">
+                <h2 id="editor-title">ADD NEW <span>ANIME</span></h2>
+                <button class="close-x" onclick="closeEditorModal()">✖</button>
             </div>
-            <div class="input-group">
-                <label>Visual Asset (URL)</label>
-                <input type="text" id="anime-img" placeholder="Paste high-res image link" autocomplete="off">
+            <div class="admin-form-grid">
+                <div class="preview-box">
+                    <img id="live-preview" src="https://via.placeholder.com/300x450/0b1120/00f0ff?text=POSTER" onerror="this.src='https://via.placeholder.com/300x450/0b1120/ff0055?text=INVALID+URL'">
+                    <span class="preview-label">Live Preview</span>
+                </div>
+                <div class="form-fields">
+                    <div class="field-group">
+                        <label>Anime Title (Type name & click Auto-Fill!)</label>
+                        <div class="input-with-btn">
+                            <input type="text" id="inp-name" placeholder="e.g. Solo Leveling" autocomplete="off">
+                            <button type="button" class="cyber-btn primary" onclick="autoFillFromAPI()" id="autofill-btn">⚡ Auto-Fill</button>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>HD Poster Image URL</label>
+                        <input type="text" id="inp-img" placeholder="Auto-filled or paste link here..." autocomplete="off" oninput="updateLivePreview()">
+                    </div>
+                    <div class="field-group">
+                        <label>Tags / Genres (Comma Separated)</label>
+                        <input type="text" id="inp-tags" placeholder="e.g. Action, Fantasy, Romance" autocomplete="off">
+                        <div class="preset-tags">
+                            <span class="preset-chip" onclick="addPresetTag('Romance')">+ Romance</span>
+                            <span class="preset-chip" onclick="addPresetTag('Action')">+ Action</span>
+                            <span class="preset-chip" onclick="addPresetTag('Isekai')">+ Isekai</span>
+                            <span class="preset-chip" onclick="addPresetTag('Comedy')">+ Comedy</span>
+                            <span class="preset-chip" onclick="addPresetTag('Fantasy')">+ Fantasy</span>
+                            <span class="preset-chip" onclick="addPresetTag('School')">+ School</span>
+                            <span class="preset-chip" onclick="addPresetTag('Sci-Fi')">+ Sci-Fi</span>
+                        </div>
+                    </div>
+                    <label class="checkbox-row">
+                        <input type="checkbox" id="inp-toptier">
+                        <span>👑 Mark as Masterpiece (Top Tier Crown)</span>
+                    </label>
+                </div>
             </div>
-            <div class="input-group">
-                <label>Classifications (Comma separated)</label>
-                <input type="text" id="anime-tags" placeholder="e.g. Action, Fantasy, Magic" autocomplete="off">
+            <div class="modal-footer">
+                <button class="cyber-btn" onclick="closeEditorModal()">Cancel</button>
+                <button class="cyber-btn primary" onclick="saveAnimeRecord()" id="save-record-btn">Save To Vault</button>
             </div>
-            <div class="modal-actions">
-                <button class="modal-btn cancel-btn" onclick="closeModal()">Abort</button>
-                <button class="modal-btn save-btn" onclick="saveAnime()" id="save-btn-text">Execute</button>
+        </div>
+    </div>
+
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal-backdrop" id="login-modal">
+        <div class="modal-window" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>SECURITY <span>CLEARANCE</span></h2>
+                <button class="close-x" onclick="closeLoginModal()">✖</button>
+            </div>
+            <div style="padding: 25px;">
+                <div class="field-group">
+                    <label>Enter Vault Passcode</label>
+                    <input type="password" id="inp-passcode" placeholder="••••••••••" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cyber-btn" onclick="closeLoginModal()">Abort</button>
+                <button class="cyber-btn primary" onclick="verifyPasscode()">Authenticate</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- BURST SPARKLE FUNCTION ---
-        function createBurst(x, y) {
-            const rootStyle = getComputedStyle(document.documentElement);
-            const themeColor = rootStyle.getPropertyValue('--theme').trim() || '#00e5ff';
-            
-            for(let i=0; i<8; i++) {
-                let spark = document.createElement('div');
-                spark.className = 'sparkle-particle';
-                document.body.appendChild(spark);
-                
-                spark.style.left = x + 'px';
-                spark.style.top = y + 'px';
-                spark.style.background = themeColor;
-                spark.style.boxShadow = `0 0 10px ${themeColor}`;
-                
-                let angle = Math.random() * Math.PI * 2;
-                let velocity = 20 + Math.random() * 40;
-                spark.style.setProperty('--tx', `${Math.cos(angle) * velocity}px`);
-                spark.style.setProperty('--ty', `${Math.sin(angle) * velocity}px`);
-                
-                setTimeout(() => spark.remove(), 500);
-            }
-        }
-
-        // --- LIVE THEME SWITCHER ---
-        const themes = [
-            { hex: '#00e5ff', name: 'CYBER CYAN' },
-            { hex: '#ff0033', name: 'CRIMSON BLOOD' },
-            { hex: '#a855f7', name: 'AMETHYST DOMAIN' },
-            { hex: '#fbbf24', name: 'ROYAL GOLD' }
-        ];
-        let currentThemeIdx = 0;
-        
-        function switchTheme() {
-            currentThemeIdx = (currentThemeIdx + 1) % themes.length;
-            const newColor = themes[currentThemeIdx].hex;
-            
-            document.documentElement.style.setProperty('--theme', newColor);
-            
-            let r = parseInt(newColor.slice(1, 3), 16), g = parseInt(newColor.slice(3, 5), 16), b = parseInt(newColor.slice(5, 7), 16);
-            document.documentElement.style.setProperty('--theme-glow', `rgba(${r}, ${g}, ${b}, 0.2)`);
-            
-            const rankEl = document.getElementById('user-rank');
-            let oldText = rankEl.innerText;
-            rankEl.innerText = themes[currentThemeIdx].name;
-            setTimeout(() => { updateRank(animeList.length); }, 1500); 
-        }
-
-        // --- INTRO LOADER ---
-        window.addEventListener('load', () => {
-            setTimeout(() => { document.getElementById('intro-screen').classList.add('intro-hidden'); }, 2000);
-        });
-
-        // --- EXACT FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyDGYwvbygKeQ5DrHR1luMfdzpbHytPgRdoo",
             authDomain: "anime-hub-4b305.firebaseapp.com",
@@ -334,186 +646,428 @@
 
         let animeList = [];
         let searchQuery = "";
+        let activeQuickFilter = "ALL";
         let isAdmin = sessionStorage.getItem("2x_admin") === "true";
-        let editingId = null; 
+        let editingId = null;
+        let isCompactGrid = false;
+        let currentInspectedName = "";
+
+        setTimeout(() => {
+            document.getElementById('boot-screen').classList.add('hidden');
+        }, 1000);
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-box');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
 
         db.ref('animes').on('value', (snapshot) => {
             animeList = [];
-            snapshot.forEach((childSnapshot) => {
-                let data = childSnapshot.val();
-                data.id = childSnapshot.key;
-                animeList.push(data);
+            snapshot.forEach((child) => {
+                let item = child.val();
+                item.id = child.key;
+                animeList.push(item);
             });
-            animeList.reverse(); 
-            renderApp();
+            updateDashboard();
+            renderGrid();
         });
 
-        function init() { if(isAdmin) enableAdminMode(); }
+        const RANKS = [
+            { min: 0, max: 5, title: "FILTHY NORMIE", icon: "🌱" },
+            { min: 5, max: 15, title: "TRAINEE WEEB", icon: "⚡" },
+            { min: 15, max: 30, title: "CLOSET OTAKU", icon: "🔥" },
+            { min: 30, max: 50, title: "NIGHTCORE HUNTER", icon: "⚔️" },
+            { min: 50, max: 75, title: "BASEMENT DWELLER", icon: "👑" },
+            { min: 75, max: 100, title: "GRASS TOUCH NOT", icon: "🌌" },
+            { min: 100, max: 9999, title: "IMMORTAL ANIME GOD", icon: "🐉" }
+        ];
 
-        // RANK SYSTEM
-        function updateRank(count) {
-            const rankEl = document.getElementById('user-rank');
-            if(count === 0) rankEl.innerText = "FILTHY NORMIE";
-            else if(count < 10) rankEl.innerText = "TRAINEE WEEB";
-            else if(count < 30) rankEl.innerText = "CLOSET OTAKU";
-            else if(count < 60) rankEl.innerText = "BASEMENT DWELLER";
-            else if(count < 100) rankEl.innerText = "GRASS TOUCH NOT";
-            else rankEl.innerText = "ANIME GOD";
+        function updateDashboard() {
+            const count = animeList.length;
+            document.getElementById('stat-total').innerText = count;
+
+            let topCount = 0;
+            let totalHype = 0;
+            animeList.forEach(a => {
+                if (a.topTier) topCount++;
+                totalHype += (a.likes || 0);
+            });
+
+            document.getElementById('stat-top').innerText = topCount;
+            document.getElementById('stat-hype').innerText = totalHype;
+
+            const xp = count * 20;
+            let currentRank = RANKS[0];
+            for (let r of RANKS) {
+                if (count >= r.min) currentRank = r;
+            }
+
+            document.getElementById('rank-emoji').innerText = currentRank.icon;
+            document.getElementById('rank-title').innerHTML = `${currentRank.title} <span>[LVL ${Math.floor(count/5) + 1}]</span>`;
+            document.getElementById('xp-current').innerText = `${xp} XP (${count} ANIME)`;
+
+            if (currentRank.max < 9999) {
+                const progress = ((count - currentRank.min) / (currentRank.max - currentRank.min)) * 100;
+                document.getElementById('xp-bar').style.width = `${Math.min(100, Math.max(5, progress))}%`;
+                document.getElementById('xp-next').innerText = `NEXT RANK AT ${currentRank.max} ANIME`;
+            } else {
+                document.getElementById('xp-bar').style.width = `100%`;
+                document.getElementById('xp-next').innerText = `MAX LEVEL REACHED`;
+            }
         }
 
-        function renderApp() {
+        function handleSearch() {
+            const input = document.getElementById("search-input");
+            searchQuery = input.value.trim();
+            document.getElementById("clear-btn").style.display = searchQuery ? "block" : "none";
             renderGrid();
-            document.getElementById("total-stats").innerText = animeList.length;
-            updateRank(animeList.length);
+        }
+
+        function clearSearch() {
+            document.getElementById("search-input").value = "";
+            searchQuery = "";
+            document.getElementById("clear-btn").style.display = "none";
+            renderGrid();
+        }
+
+        function setQuickFilter(tag, btnEl) {
+            activeQuickFilter = tag;
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            renderGrid();
         }
 
         function renderGrid() {
             const grid = document.getElementById("anime-grid");
-            grid.innerHTML = '';
+            grid.innerHTML = "";
 
-            let filteredAnimes = animeList;
-            
-            // Advanced Search
+            let list = [...animeList];
+
+            if (activeQuickFilter === "TOP") {
+                list = list.filter(a => a.topTier === true);
+            } else if (activeQuickFilter !== "ALL") {
+                const qTag = activeQuickFilter.toLowerCase();
+                list = list.filter(a => Array.isArray(a.tags) && a.tags.some(t => t.toLowerCase().includes(qTag)));
+            }
+
             if (searchQuery !== "") {
-                const query = searchQuery.toLowerCase().trim();
-                filteredAnimes = filteredAnimes.filter(a => {
-                    const safeName = a.name ? a.name.toLowerCase() : "";
-                    const safeTags = a.tags ? a.tags : [];
-                    const matchName = safeName.includes(query);
-                    const matchTag = safeTags.some(tag => tag.toLowerCase().includes(query));
-                    return matchName || matchTag; 
+                const q = searchQuery.toLowerCase();
+                list = list.filter(a => {
+                    const nameMatch = (a.name || "").toLowerCase().includes(q);
+                    const tagMatch = Array.isArray(a.tags) && a.tags.some(t => t.toLowerCase().includes(q));
+                    return nameMatch || tagMatch;
                 });
             }
 
-            if(filteredAnimes.length === 0) {
-                grid.innerHTML = `<div class="empty-msg">No anime found for "${searchQuery}"</div>`;
+            const sortMode = document.getElementById("sort-select").value;
+            if (sortMode === "newest") list.reverse();
+            else if (sortMode === "hype") list.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            else if (sortMode === "az") list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            else if (sortMode === "za") list.sort((a, b) => (b.name || "").localeCompare(a.name || ""));
+
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Records Found</h3>
+                        <p>No anime matched your filter or search criteria.</p>
+                    </div>`;
                 return;
             }
 
-            filteredAnimes.forEach((anime, index) => {
-                let safeTags = anime.tags ? anime.tags : [];
-                let tagsHtml = safeTags.map(tag => `<span class="card-tag">${tag.trim()}</span>`).join('');
-                let stringTags = safeTags.join(", ").replace(/"/g, '&quot;'); 
-                let safeName = anime.name.replace(/"/g, '&quot;');
-                let safeImg = anime.img.replace(/"/g, '&quot;');
+            const fragment = document.createDocumentFragment();
 
+            list.forEach((anime, idx) => {
+                const safeTags = Array.isArray(anime.tags) ? anime.tags : [];
+                const tagsHtml = safeTags.slice(0, 3).map(t => `<span class="card-tag">${t.trim()}</span>`).join('');
+                const likesCount = anime.likes || 0;
+                
                 const card = document.createElement("div");
-                card.className = "anime-card";
-                card.style.animationDelay = `${(index % 12) * 0.04}s`; // Faster, less laggy stagger
-                
-                card.onclick = (e) => {
-                    let clientX = e.clientX || (e.touches && e.touches[0].clientX);
-                    let clientY = e.clientY || (e.touches && e.touches[0].clientY);
-                    if(clientX && clientY) createBurst(clientX, clientY);
-                };
-                
+                card.className = `anime-card ${anime.topTier ? 'top-tier' : ''}`;
+                card.onclick = () => inspectAnime(anime, "VAULT RECORD #" + (idx + 1));
+
                 card.innerHTML = `
-                    <img src="${anime.img}" alt="${safeName}" class="anime-img" onerror="this.src='https://via.placeholder.com/400x600/0f172a/00e5ff?text=No+Image'" loading="lazy">
+                    <div class="card-badges">
+                        <span class="card-index">#${idx + 1}</span>
+                        ${anime.topTier ? '<span class="crown-badge">👑 TOP</span>' : ''}
+                    </div>
+                    <button class="hype-btn" title="Give Hype!">🔥 <span>${likesCount}</span></button>
+                    <img src="${anime.img}" alt="${anime.name}" class="anime-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600/0f172a/00f0ff?text=NO+POSTER'">
                     <div class="card-overlay">
                         <div class="anime-title">${anime.name}</div>
                         <div class="anime-tags">${tagsHtml}</div>
                     </div>
-                    <div class="admin-actions">
-                        <button class="action-btn edit-btn" onclick="editAnime('${anime.id}', '${safeName}', '${safeImg}', '${stringTags}', event)" title="Modify">✏️</button>
-                        <button class="action-btn delete-btn" onclick="deleteAnime('${anime.id}', event)" title="Eradicate">✖</button>
+                    <div class="card-admin-bar">
+                        <button class="card-btn star ${anime.topTier ? 'active' : ''}" title="Toggle Top Tier Crown">👑</button>
+                        <button class="card-btn edit" title="Edit Anime">✏️</button>
+                        <button class="card-btn del" title="Delete Anime">✖</button>
                     </div>
                 `;
-                grid.appendChild(card);
+
+                card.querySelector('.hype-btn').onclick = (e) => {
+                    e.stopPropagation();
+                    db.ref('animes/' + anime.id).update({ likes: (anime.likes || 0) + 1 });
+                    showToast(`🔥 HYPED: ${anime.name}`);
+                };
+
+                card.querySelector('.star').onclick = (e) => {
+                    e.stopPropagation();
+                    db.ref('animes/' + anime.id).update({ topTier: !anime.topTier });
+                    showToast(!anime.topTier ? "👑 ADDED TO TOP TIER!" : "REMOVED FROM TOP TIER");
+                };
+                card.querySelector('.edit').onclick = (e) => {
+                    e.stopPropagation();
+                    openEditorModal(anime);
+                };
+                card.querySelector('.del').onclick = (e) => {
+                    e.stopPropagation();
+                    deleteAnimeRecord(anime.id, anime.name);
+                };
+
+                fragment.appendChild(card);
             });
+
+            grid.appendChild(fragment);
         }
 
-        function handleSearch() {
-            searchQuery = document.getElementById("search-input").value;
-            renderGrid();
+        async function inspectAnime(anime, badgeText = "VERIFIED ENTRY") {
+            currentInspectedName = anime.name || "";
+
+            document.getElementById("inspect-img").src = anime.img;
+            document.getElementById("inspect-title").innerText = currentInspectedName;
+            document.getElementById("inspect-badge").innerText = anime.topTier ? "👑 TOP TIER MASTERPIECE" : badgeText;
+            
+            const tagsBox = document.getElementById("inspect-tags");
+            const safeTags = Array.isArray(anime.tags) ? anime.tags : [];
+            tagsBox.innerHTML = safeTags.map(t => `<span class="card-tag" style="font-size:12px; padding:5px 12px;">${t.trim()}</span>`).join('');
+
+            document.getElementById("inspect-score").innerText = "⭐ Loading...";
+            document.getElementById("inspect-eps").innerText = "📺 -- Eps";
+            document.getElementById("inspect-synopsis").innerText = "Fetching synopsis from MyAnimeList database...";
+
+            document.getElementById("inspect-modal").classList.add("open");
+
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(currentInspectedName)}&limit=1`);
+                const json = await res.json();
+                if (json.data && json.data.length > 0) {
+                    const info = json.data[0];
+                    document.getElementById("inspect-score").innerText = info.score ? `⭐ ${info.score} / 10` : "⭐ N/A";
+                    document.getElementById("inspect-eps").innerText = info.episodes ? `📺 ${info.episodes} Eps` : "📺 Ongoing / Movie";
+                    document.getElementById("inspect-synopsis").innerText = info.synopsis || "No synopsis available.";
+                } else {
+                    document.getElementById("inspect-score").innerText = "⭐ Custom";
+                    document.getElementById("inspect-synopsis").innerText = "Custom vault entry. Click streaming buttons below to watch!";
+                }
+            } catch (err) {
+                document.getElementById("inspect-synopsis").innerText = "Select any server below to stream this anime.";
+            }
         }
 
-        // --- NEW ADMIN LOGIN LOGIC ---
-        function checkAdmin() {
-            if(isAdmin) {
-                if(confirm("Terminate Admin Session?")) {
-                    isAdmin = false; sessionStorage.removeItem("2x_admin");
-                    document.body.classList.remove('admin-mode');
-                    document.getElementById('lock-svg').innerHTML = '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>';
-                    document.getElementById('admin-icon').classList.remove('unlocked');
+        function launchStream(platform) {
+            const q = encodeURIComponent(currentInspectedName);
+            let url = "";
+
+            if (platform === 'miruro') {
+                url = `https://www.miruro.tv/search?query=${q}`;
+            } else if (platform === 'gogo') {
+                url = `https://gogoanime.hu//search.html?keyword=${q}`;
+            } else if (platform === 'aniwave') {
+                url = `https://animesune.com/search?keyword=${q}`;
+            }
+
+            showToast("🚀 LAUNCHING SERVER...");
+            window.open(url, '_blank');
+        }
+
+        function copyAnimeName() {
+            navigator.clipboard.writeText(currentInspectedName);
+            showToast(`📋 COPIED: ${currentInspectedName}`);
+        }
+
+        function closeInspectModal() {
+            document.getElementById("inspect-modal").classList.remove("open");
+        }
+
+        function pickRandomAnime() {
+            if (animeList.length === 0) return showToast("VAULT IS EMPTY!");
+            const randomItem = animeList[Math.floor(Math.random() * animeList.length)];
+            inspectAnime(randomItem, "🎲 RANDOM GACHA PICK");
+            showToast(`ROLLED: ${randomItem.name}`);
+        }
+
+        async function autoFillFromAPI() {
+            const titleInp = document.getElementById("inp-name");
+            const query = titleInp.value.trim();
+            if (!query) return showToast("TYPE ANIME NAME FIRST!");
+
+            const btn = document.getElementById("autofill-btn");
+            btn.innerText = "⏳...";
+
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=1`);
+                const json = await res.json();
+                if (json.data && json.data.length > 0) {
+                    const anime = json.data[0];
+                    titleInp.value = anime.title_english || anime.title;
+                    
+                    const hdImg = anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url || "";
+                    document.getElementById("inp-img").value = hdImg;
+                    updateLivePreview();
+
+                    const genres = [...(anime.genres || []), ...(anime.themes || [])].slice(0, 4).map(g => g.name);
+                    if (genres.length > 0) {
+                        document.getElementById("inp-tags").value = genres.join(", ");
+                    }
+                    showToast("✨ AUTO-FILLED SUCCESSFULLY!");
+                } else {
+                    showToast("ANIME NOT FOUND!");
+                }
+            } catch (e) {
+                showToast("API ERROR! TRY AGAIN.");
+            } finally {
+                btn.innerText = "⚡ Auto-Fill";
+            }
+        }
+
+        const THEMES = [
+            { name: "CYBER CYAN", hex: "#00f0ff", dim: "rgba(0, 240, 255, 0.14)", glow: "rgba(0, 240, 255, 0.35)" },
+            { name: "CRIMSON OVERDRIVE", hex: "#ff0055", dim: "rgba(255, 0, 85, 0.14)", glow: "rgba(255, 0, 85, 0.35)" },
+            { name: "AMETHYST PHANTOM", hex: "#a855f7", dim: "rgba(168, 85, 247, 0.14)", glow: "rgba(168, 85, 247, 0.35)" },
+            { name: "EMERALD MATRIX", hex: "#10b981", dim: "rgba(16, 185, 129, 0.14)", glow: "rgba(16, 185, 129, 0.35)" },
+            { name: "SOVEREIGN GOLD", hex: "#f59e0b", dim: "rgba(245, 158, 11, 0.14)", glow: "rgba(245, 158, 11, 0.35)" }
+        ];
+        let themeIdx = 0;
+
+        function cycleTheme() {
+            themeIdx = (themeIdx + 1) % THEMES.length;
+            const t = THEMES[themeIdx];
+            document.documentElement.style.setProperty('--theme', t.hex);
+            document.documentElement.style.setProperty('--theme-dim', t.dim);
+            document.documentElement.style.setProperty('--theme-glow', t.glow);
+            showToast(`AURA: ${t.name}`);
+        }
+
+        function toggleGridSize() {
+            isCompactGrid = !isCompactGrid;
+            document.documentElement.style.setProperty('--grid-min', isCompactGrid ? '155px' : '210px');
+            showToast(isCompactGrid ? "VIEW: COMPACT GRID" : "VIEW: LARGE GRID");
+        }
+
+        function applyAdminUI() {
+            document.body.classList.toggle('admin-mode', isAdmin);
+            document.getElementById('lock-icon').innerHTML = isAdmin
+                ? '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/>'
+                : '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>';
+        }
+        applyAdminUI();
+
+        function handleAdminClick() {
+            if (isAdmin) {
+                if (confirm("Disconnect from Admin Command Center?")) {
+                    isAdmin = false;
+                    sessionStorage.removeItem("2x_admin");
+                    applyAdminUI();
+                    showToast("ADMIN SESSION TERMINATED");
                 }
             } else {
-                document.getElementById('login-modal').classList.add('show');
-                document.getElementById('admin-pass').value = '';
-                setTimeout(() => { document.getElementById('admin-pass').focus(); }, 100);
+                document.getElementById("inp-passcode").value = "";
+                document.getElementById("login-modal").classList.add("open");
+                setTimeout(() => document.getElementById("inp-passcode").focus(), 100);
             }
         }
 
-        function closeLogin() {
-            document.getElementById('login-modal').classList.remove('show');
+        function closeLoginModal() {
+            document.getElementById("login-modal").classList.remove("open");
         }
 
-        function verifyAdmin() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === "7391737301") {
-                enableAdminMode(); 
-                closeLogin();
-            } else { 
-                alert("ACCESS DENIED: Incorrect Passcode."); 
-                document.getElementById('admin-pass').value = '';
-                document.getElementById('admin-pass').focus();
+        function verifyPasscode() {
+            const code = document.getElementById("inp-passcode").value;
+            if (code === "7391737301") {
+                isAdmin = true;
+                sessionStorage.setItem("2x_admin", "true");
+                applyAdminUI();
+                closeLoginModal();
+                showToast("ADMIN ACCESS GRANTED");
+            } else {
+                showToast("ACCESS DENIED: WRONG CODE");
+                document.getElementById("inp-passcode").value = "";
             }
         }
 
-        document.getElementById('admin-pass').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') verifyAdmin();
+        document.getElementById("inp-passcode").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") verifyPasscode();
         });
 
-        function enableAdminMode() {
-            isAdmin = true; sessionStorage.setItem("2x_admin", "true");
-            document.body.classList.add('admin-mode');
-            document.getElementById('lock-svg').innerHTML = '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/>';
-            document.getElementById('admin-icon').classList.add('unlocked');
+        function openEditorModal(anime = null) {
+            if (anime) {
+                editingId = anime.id;
+                document.getElementById("editor-title").innerHTML = `MODIFY <span>ANIME</span>`;
+                document.getElementById("save-record-btn").innerText = "Update Record";
+                document.getElementById("inp-name").value = anime.name || "";
+                document.getElementById("inp-img").value = anime.img || "";
+                document.getElementById("inp-tags").value = Array.isArray(anime.tags) ? anime.tags.join(", ") : "";
+                document.getElementById("inp-toptier").checked = !!anime.topTier;
+            } else {
+                editingId = null;
+                document.getElementById("editor-title").innerHTML = `ADD NEW <span>ANIME</span>`;
+                document.getElementById("save-record-btn").innerText = "Save To Vault";
+                document.getElementById("inp-name").value = "";
+                document.getElementById("inp-img").value = "";
+                document.getElementById("inp-tags").value = "";
+                document.getElementById("inp-toptier").checked = false;
+            }
+            updateLivePreview();
+            document.getElementById("editor-modal").classList.add("open");
         }
 
-        function deleteAnime(id, event) {
-            event.stopPropagation();
-            if(confirm("Eradicate this record from the database?")) { db.ref('animes/' + id).remove(); }
+        function closeEditorModal() {
+            document.getElementById("editor-modal").classList.remove("open");
         }
 
-        function editAnime(id, name, img, tags, event) {
-            event.stopPropagation(); editingId = id;
-            document.getElementById("modal-title").innerHTML = "MODIFY <span>ENTRY</span>";
-            document.getElementById("save-btn-text").innerText = "UPDATE RECORD";
-            document.getElementById("anime-name").value = name;
-            document.getElementById("anime-img").value = img;
-            document.getElementById("anime-tags").value = tags;
-            document.getElementById("admin-modal").classList.add('show');
+        function updateLivePreview() {
+            const url = document.getElementById("inp-img").value.trim();
+            document.getElementById("live-preview").src = url || "https://via.placeholder.com/300x450/0b1120/00f0ff?text=POSTER";
         }
 
-        function openModal() { 
-            editingId = null;
-            document.getElementById("modal-title").innerHTML = "NEW <span>ENTRY</span>";
-            document.getElementById("save-btn-text").innerText = "EXECUTE";
-            document.getElementById("admin-modal").classList.add('show'); 
+        function addPresetTag(tag) {
+            const input = document.getElementById("inp-tags");
+            let current = input.value.split(",").map(t => t.trim()).filter(t => t !== "");
+            if (!current.some(t => t.toLowerCase() === tag.toLowerCase())) {
+                current.push(tag);
+                input.value = current.join(", ");
+            }
         }
 
-        function closeModal() {
-            document.getElementById("admin-modal").classList.remove('show');
-            setTimeout(() => {
-                editingId = null; document.getElementById("anime-name").value = '';
-                document.getElementById("anime-img").value = ''; document.getElementById("anime-tags").value = '';
-            }, 300);
+        function saveAnimeRecord() {
+            const name = document.getElementById("inp-name").value.trim();
+            const img = document.getElementById("inp-img").value.trim();
+            const rawTags = document.getElementById("inp-tags").value.trim();
+            const topTier = document.getElementById("inp-toptier").checked;
+
+            if (!name || !img || !rawTags) {
+                return showToast("PLEASE FILL ALL FIELDS!");
+            }
+
+            const tags = rawTags.split(",").map(t => t.trim()).filter(t => t !== "");
+
+            if (editingId) {
+                db.ref('animes/' + editingId).update({ name, img, tags, topTier });
+                showToast("RECORD UPDATED!");
+            } else {
+                db.ref('animes').push({ name, img, tags, topTier, likes: 0 });
+                showToast("ADDED TO VAULT!");
+            }
+            closeEditorModal();
         }
 
-        function saveAnime() {
-            const name = document.getElementById("anime-name").value.trim();
-            const img = document.getElementById("anime-img").value.trim();
-            const tagsInput = document.getElementById("anime-tags").value.trim();
-            if (!name || !img || !tagsInput) { alert("Missing parameters!"); return; }
-            
-            const tags = tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag !== "");
-            
-            if(editingId) { db.ref('animes/' + editingId).update({ name: name, img: img, tags: tags });
-            } else { db.ref('animes').push({ name: name, img: img, tags: tags }); }
-            closeModal();
+        function deleteAnimeRecord(id, title) {
+            if (confirm(`Permanently delete "${title}" from the global server?`)) {
+                db.ref('animes/' + id).remove();
+                showToast("RECORD DELETED");
+            }
         }
-
-        init();
     </script>
 </body>
 </html>
